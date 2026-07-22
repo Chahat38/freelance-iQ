@@ -2,8 +2,10 @@ import express from "express";
 import path from "path";
 import { fileURLToPath } from "url";
 import { createServer as createViteServer } from "vite";
-import { GoogleGenAI, Type } from "@google/genai";
 import dotenv from "dotenv";
+
+import healthHandler from "./api/health";
+import generateHandler from "./api/ai/generate";
 
 dotenv.config();
 
@@ -15,77 +17,9 @@ const PORT = 3000;
 
 app.use(express.json({ limit: "10mb" }));
 
-// Initialize Gemini Client
-const getGeminiAI = () => {
-  const apiKey = process.env.GEMINI_API_KEY;
-  if (!apiKey || apiKey === "MY_GEMINI_API_KEY") {
-    return null;
-  }
-  return new GoogleGenAI({
-    apiKey,
-    httpOptions: {
-      headers: {
-        "User-Agent": "aistudio-build",
-      },
-    },
-  });
-};
-
-// Health Check API
-app.get("/api/health", (req, res) => {
-  res.json({ status: "ok", timestamp: new Date().toISOString() });
-});
-
-// Generic AI Endpoint for FreelanceIQ OS Modules
-app.post("/api/ai/generate", async (req, res) => {
-  try {
-    const { prompt, systemInstruction, isJson, responseSchema } = req.body;
-
-    if (!prompt) {
-      return res.status(400).json({ error: "Prompt is required" });
-    }
-
-    const ai = getGeminiAI();
-    if (!ai) {
-      // Fallback response if GEMINI_API_KEY is not configured yet
-      return res.json({
-        success: true,
-        text: "Note: Running in local offline mode. Add your GEMINI_API_KEY in Secrets for live AI responses.\n\n" + prompt,
-        isFallback: true,
-      });
-    }
-
-    const config: any = {};
-    if (systemInstruction) {
-      config.systemInstruction = systemInstruction;
-    }
-    if (isJson) {
-      config.responseMimeType = "application/json";
-      if (responseSchema) {
-        config.responseSchema = responseSchema;
-      }
-    }
-
-    const response = await ai.models.generateContent({
-      model: "gemini-3.6-flash",
-      contents: prompt,
-      config,
-    });
-
-    const text = response.text || "";
-
-    res.json({
-      success: true,
-      text,
-      isFallback: false,
-    });
-  } catch (error: any) {
-    console.error("Error in /api/ai/generate:", error);
-    res.status(500).json({
-      error: error.message || "An error occurred during AI generation.",
-    });
-  }
-});
+// API Routes routing to Vercel serverless function handlers
+app.all("/api/health", (req, res) => healthHandler(req, res));
+app.all("/api/ai/generate", (req, res) => generateHandler(req, res));
 
 // Vite middleware or production static server
 async function startServer() {

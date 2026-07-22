@@ -352,20 +352,37 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       });
 
       if (!res.ok) {
-        throw new Error(`HTTP ${res.status}`);
+        let errorMessage = `Server error (${res.status})`;
+        try {
+          const errJson = await res.json();
+          if (errJson && errJson.error) {
+            errorMessage = errJson.error;
+          }
+        } catch (_) {
+          // ignore json parse error
+        }
+
+        showToast(errorMessage, 'error');
+
+        return {
+          success: false,
+          text: `Unable to generate AI content: ${errorMessage}`,
+          isFallback: true,
+        };
       }
 
       const data = await res.json();
       return {
-        success: data.success,
+        success: data.success ?? true,
         text: data.text || '',
-        isFallback: data.isFallback,
+        isFallback: data.isFallback ?? false,
       };
     } catch (err: any) {
-      console.warn('Backend AI route unavailable, using frontend smart generator fallback:', err);
+      const msg = err?.message || 'Network error connecting to AI API';
+      showToast(msg, 'error');
       return {
-        success: true,
-        text: 'Fallback result.',
+        success: false,
+        text: `Network error: ${msg}`,
         isFallback: true,
       };
     }
