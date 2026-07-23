@@ -106,9 +106,9 @@ const initialTasks: Task[] = [
 ];
 
 const initialClients: Client[] = [
-  { id: 'c1', name: 'Alexander Wright', company: 'Apex Digital Inc (USA)', email: 'alex@apexdigital.com', status: 'Active', revenue: 4500, notes: 'Loves quick turnaround on React & UI tasks.', followUpDate: '2026-07-28' },
-  { id: 'c2', name: 'Sarah Jenkins', company: 'SaaSify Studio (UK)', email: 'sarah@saasify.co.uk', status: 'Active', revenue: 3200, notes: 'Ongoing monthly retainer for frontend support.', followUpDate: '2026-08-01' },
-  { id: 'c3', name: 'Tariq Al-Mansoor', company: 'Dubai Tech Ventures', email: 'tariq@dtv.ae', status: 'Completed', revenue: 2100, notes: 'Completed MVP for Real Estate Portal.', followUpDate: '2026-08-15' },
+  { id: 'c1', name: 'Alexander Wright', company: 'Apex Digital Inc (USA)', email: 'alex@apexdigital.com', platform: 'Upwork', status: 'Active', totalBilled: 4500, revenue: 4500, country: 'United States', notes: 'Loves quick turnaround on React & UI tasks.', followUpDate: '2026-07-28', lastContacted: '2026-07-20' },
+  { id: 'c2', name: 'Sarah Jenkins', company: 'SaaSify Studio (UK)', email: 'sarah@saasify.co.uk', platform: 'Direct Client', status: 'Active', totalBilled: 3200, revenue: 3200, country: 'United Kingdom', notes: 'Ongoing monthly retainer for frontend support.', followUpDate: '2026-08-01', lastContacted: '2026-07-22' },
+  { id: 'c3', name: 'Tariq Al-Mansoor', company: 'Dubai Tech Ventures', email: 'tariq@dtv.ae', platform: 'LinkedIn', status: 'Completed', totalBilled: 2100, revenue: 2100, country: 'UAE', notes: 'Completed MVP for Real Estate Portal.', followUpDate: '2026-08-15', lastContacted: '2026-07-15' },
 ];
 
 const initialNotes: Note[] = [

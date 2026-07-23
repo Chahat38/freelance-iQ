@@ -31,9 +31,15 @@ import {
   ChevronLeft,
   ChevronRight,
   Flame,
+  X,
 } from 'lucide-react';
 
-export const Sidebar: React.FC = () => {
+interface SidebarProps {
+  isMobileOpen?: boolean;
+  onCloseMobile?: () => void;
+}
+
+export const Sidebar: React.FC<SidebarProps> = ({ isMobileOpen = false, onCloseMobile }) => {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const { user } = useApp();
   const location = useLocation();
@@ -96,20 +102,22 @@ export const Sidebar: React.FC = () => {
     },
   ];
 
-  return (
-    <aside
-      className={`relative z-20 bg-[#111827]/50 border-r border-white/10 backdrop-blur-xl transition-all duration-300 flex flex-col justify-between shrink-0 ${
-        isCollapsed ? 'w-20' : 'w-64'
-      }`}
-    >
+  const handleNavClick = () => {
+    if (onCloseMobile) {
+      onCloseMobile();
+    }
+  };
+
+  const sidebarContent = (
+    <div className="flex flex-col h-full justify-between">
       {/* Top Header Logo */}
       <div>
-        <div className="p-5 flex items-center justify-between border-b border-white/10">
+        <div className="p-4 sm:p-5 flex items-center justify-between border-b border-white/10">
           <div className="flex items-center gap-3 overflow-hidden">
             <div className="w-8 h-8 rounded-lg bg-indigo-600 flex items-center justify-center shadow-lg shadow-indigo-500/20 shrink-0">
               <span className="font-bold text-white text-base">IQ</span>
             </div>
-            {!isCollapsed && (
+            {(!isCollapsed || isMobileOpen) && (
               <div className="truncate">
                 <h1 className="font-bold text-white text-base tracking-tight truncate">FreelanceIQ</h1>
                 <p className="text-[10px] text-slate-400 uppercase tracking-widest font-semibold">AI OS v2.5</p>
@@ -117,18 +125,30 @@ export const Sidebar: React.FC = () => {
             )}
           </div>
 
+          {/* Desktop collapse toggle */}
           <button
             onClick={() => setIsCollapsed(!isCollapsed)}
-            className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-white/5 transition shrink-0"
+            className="hidden lg:block p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-white/5 transition shrink-0"
             title={isCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
           >
             {isCollapsed ? <ChevronRight className="w-4 h-4" /> : <ChevronLeft className="w-4 h-4" />}
           </button>
+
+          {/* Mobile Close Button */}
+          {onCloseMobile && (
+            <button
+              onClick={onCloseMobile}
+              className="lg:hidden p-2 rounded-xl text-slate-400 hover:text-white hover:bg-white/10 transition"
+              title="Close menu"
+            >
+              <X className="w-5 h-5" />
+            </button>
+          )}
         </div>
 
         {/* Pro Plan / Streak Card Widget */}
-        {!isCollapsed && (
-          <div className="m-3 p-4 rounded-2xl bg-gradient-to-br from-indigo-600/20 to-purple-600/20 border border-white/10 backdrop-blur-md">
+        {(!isCollapsed || isMobileOpen) && (
+          <div className="m-3 p-3.5 rounded-2xl bg-gradient-to-br from-indigo-600/20 to-purple-600/20 border border-white/10 backdrop-blur-md">
             <div className="flex items-center justify-between mb-1.5">
               <div className="flex items-center gap-1.5 text-xs text-indigo-300 font-semibold">
                 <Flame className="w-4 h-4 text-amber-400" />
@@ -146,10 +166,10 @@ export const Sidebar: React.FC = () => {
         )}
 
         {/* Navigation Items */}
-        <div className="p-3 space-y-5 max-h-[calc(100vh-200px)] overflow-y-auto custom-scrollbar">
+        <div className="p-3 space-y-4 max-h-[calc(100vh-220px)] overflow-y-auto custom-scrollbar">
           {navGroups.map((group) => (
             <div key={group.title}>
-              {!isCollapsed && (
+              {(!isCollapsed || isMobileOpen) && (
                 <p className="px-3 text-[10px] font-semibold text-slate-500 tracking-widest uppercase mb-2">
                   {group.title}
                 </p>
@@ -163,17 +183,18 @@ export const Sidebar: React.FC = () => {
                     <NavLink
                       key={item.path}
                       to={item.path}
-                      className={`flex items-center gap-3 px-3 py-2 rounded-xl text-xs transition duration-150 relative group ${
+                      onClick={handleNavClick}
+                      className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs transition duration-150 relative group ${
                         isActive
                           ? 'bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 font-medium'
                           : 'text-slate-400 hover:bg-white/5 hover:text-white'
                       }`}
-                      title={isCollapsed ? item.name : undefined}
+                      title={isCollapsed && !isMobileOpen ? item.name : undefined}
                     >
                       <Icon className={`w-4 h-4 shrink-0 ${isActive ? 'text-indigo-400' : 'text-slate-400 group-hover:text-slate-200'}`} />
-                      {!isCollapsed && <span className="truncate">{item.name}</span>}
+                      {(!isCollapsed || isMobileOpen) && <span className="truncate">{item.name}</span>}
 
-                      {!isCollapsed && item.badge && (
+                      {(!isCollapsed || isMobileOpen) && item.badge && (
                         <span className="ml-auto text-[9px] font-bold px-1.5 py-0.5 rounded bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">
                           {item.badge}
                         </span>
@@ -195,7 +216,7 @@ export const Sidebar: React.FC = () => {
             alt={user.name}
             className="w-8 h-8 rounded-full border border-indigo-500/50 object-cover shrink-0"
           />
-          {!isCollapsed && (
+          {(!isCollapsed || isMobileOpen) && (
             <div className="truncate">
               <p className="text-xs font-semibold text-white truncate">{user.name}</p>
               <p className="text-[10px] text-slate-400 truncate">{user.country}</p>
@@ -203,6 +224,36 @@ export const Sidebar: React.FC = () => {
           )}
         </div>
       </div>
-    </aside>
+    </div>
+  );
+
+  return (
+    <>
+      {/* Mobile Drawer Overlay */}
+      {isMobileOpen && (
+        <div className="fixed inset-0 z-50 lg:hidden">
+          {/* Backdrop */}
+          <div
+            className="fixed inset-0 bg-black/70 backdrop-blur-sm transition-opacity"
+            onClick={onCloseMobile}
+          />
+
+          {/* Drawer Sidebar */}
+          <aside className="fixed inset-y-0 left-0 w-72 max-w-[85vw] bg-[#0F172A] border-r border-white/10 shadow-2xl z-50 flex flex-col">
+            {sidebarContent}
+          </aside>
+        </div>
+      )}
+
+      {/* Desktop Persistent Sidebar */}
+      <aside
+        className={`hidden lg:flex relative z-20 bg-[#111827]/50 border-r border-white/10 backdrop-blur-xl transition-all duration-300 flex-col justify-between shrink-0 ${
+          isCollapsed ? 'w-20' : 'w-64'
+        }`}
+      >
+        {sidebarContent}
+      </aside>
+    </>
   );
 };
+

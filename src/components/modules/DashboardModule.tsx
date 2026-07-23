@@ -71,29 +71,29 @@ export const DashboardModule: React.FC = () => {
   return (
     <div className="space-y-6 animate-in fade-in duration-300">
       {/* Dashboard Hero Header */}
-      <div className="p-8 rounded-3xl bg-white/[0.03] border border-white/10 backdrop-blur-md relative overflow-hidden flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+      <div className="p-5 sm:p-8 rounded-2xl sm:rounded-3xl bg-white/[0.03] border border-white/10 backdrop-blur-md relative overflow-hidden flex flex-col md:flex-row items-start md:items-center justify-between gap-4 sm:gap-6">
         <div className="absolute -right-10 -top-10 w-80 h-80 bg-indigo-600/10 rounded-full blur-3xl pointer-events-none" />
 
         <div className="relative z-10 space-y-1">
-          <h2 className="text-3xl font-bold text-white tracking-tight">
+          <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-white tracking-tight">
             Assalam-o-Alaikum, {user.name} 👋
           </h2>
-          <p className="text-slate-400 text-sm">
+          <p className="text-slate-400 text-xs sm:text-sm">
             Your AI-driven business overview for today. You have <span className="text-indigo-400 font-medium">{pendingTasksCount} pending tasks</span> and a <span className="text-emerald-400 font-medium">{user.streakDays}-day streak</span>.
           </p>
         </div>
 
-        <div className="relative z-10 flex items-center gap-3">
+        <div className="relative z-10 flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 sm:gap-3 w-full md:w-auto">
           <button
             onClick={() => navigate('/app/proposal-generator')}
-            className="px-5 py-2.5 rounded-2xl bg-indigo-600 hover:bg-indigo-500 text-white font-semibold text-xs shadow-lg shadow-indigo-600/25 flex items-center gap-2 transition"
+            className="px-4 sm:px-5 py-2.5 rounded-xl sm:rounded-2xl bg-indigo-600 hover:bg-indigo-500 text-white font-semibold text-xs shadow-lg shadow-indigo-600/25 flex items-center justify-center gap-2 transition"
           >
             <Sparkles className="w-4 h-4" />
             <span>Generate Proposal</span>
           </button>
           <button
             onClick={() => navigate('/app/ai-mentor')}
-            className="px-5 py-2.5 rounded-2xl bg-white/5 hover:bg-white/10 border border-white/10 text-slate-200 font-semibold text-xs transition"
+            className="px-4 sm:px-5 py-2.5 rounded-xl sm:rounded-2xl bg-white/5 hover:bg-white/10 border border-white/10 text-slate-200 font-semibold text-xs transition text-center"
           >
             Ask AI Mentor
           </button>

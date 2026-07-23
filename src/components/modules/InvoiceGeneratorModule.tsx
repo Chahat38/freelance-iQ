@@ -230,32 +230,52 @@ export const InvoiceGeneratorModule: React.FC = () => {
 
             <div className="space-y-2">
               {items.map((item) => (
-                <div key={item.id} className="grid grid-cols-12 gap-2 items-center bg-slate-950 p-2.5 rounded-xl border border-slate-800">
-                  <input
-                    type="text"
-                    value={item.description}
-                    onChange={(e) => handleItemChange(item.id, 'description', e.target.value)}
-                    placeholder="Line item description..."
-                    className="col-span-6 bg-transparent text-xs text-slate-100 focus:outline-none"
-                  />
-                  <input
-                    type="number"
-                    value={item.qty}
-                    onChange={(e) => handleItemChange(item.id, 'qty', e.target.value)}
-                    className="col-span-2 bg-slate-900 text-xs text-slate-100 p-1.5 rounded text-center border border-slate-800"
-                  />
-                  <input
-                    type="number"
-                    value={item.rate}
-                    onChange={(e) => handleItemChange(item.id, 'rate', e.target.value)}
-                    className="col-span-3 bg-slate-900 text-xs text-slate-100 p-1.5 rounded text-right border border-slate-800"
-                  />
-                  <button
-                    onClick={() => handleRemoveItem(item.id)}
-                    className="col-span-1 text-slate-500 hover:text-rose-400 flex justify-center"
-                  >
-                    <Trash2 className="w-4 h-4" />
-                  </button>
+                <div key={item.id} className="grid grid-cols-1 md:grid-cols-12 gap-2 items-center bg-slate-950 p-3 rounded-xl border border-slate-800">
+                  <div className="md:col-span-6">
+                    <label className="text-[10px] text-slate-500 md:hidden block mb-0.5">Description</label>
+                    <input
+                      type="text"
+                      value={item.description}
+                      onChange={(e) => handleItemChange(item.id, 'description', e.target.value)}
+                      placeholder="Line item description..."
+                      className="w-full bg-slate-900 md:bg-transparent text-xs text-slate-100 p-1.5 md:p-0 rounded md:rounded-none border md:border-none border-slate-800 focus:outline-none"
+                    />
+                  </div>
+                  <div className="grid grid-cols-3 md:col-span-5 gap-2 items-center">
+                    <div>
+                      <label className="text-[10px] text-slate-500 md:hidden block mb-0.5">Qty</label>
+                      <input
+                        type="number"
+                        value={item.qty}
+                        onChange={(e) => handleItemChange(item.id, 'qty', e.target.value)}
+                        className="w-full bg-slate-900 text-xs text-slate-100 p-1.5 rounded text-center border border-slate-800"
+                      />
+                    </div>
+                    <div>
+                      <label className="text-[10px] text-slate-500 md:hidden block mb-0.5">Rate</label>
+                      <input
+                        type="number"
+                        value={item.rate}
+                        onChange={(e) => handleItemChange(item.id, 'rate', e.target.value)}
+                        className="w-full bg-slate-900 text-xs text-slate-100 p-1.5 rounded text-right border border-slate-800"
+                      />
+                    </div>
+                    <div>
+                      <label className="text-[10px] text-slate-500 md:hidden block mb-0.5">Amount</label>
+                      <div className="text-xs font-semibold text-slate-200 text-right py-1.5">
+                        {item.amount.toLocaleString()}
+                      </div>
+                    </div>
+                  </div>
+                  <div className="flex justify-end md:justify-center md:col-span-1 pt-1 md:pt-0 border-t md:border-t-0 border-slate-800/60">
+                    <button
+                      onClick={() => handleRemoveItem(item.id)}
+                      className="text-slate-500 hover:text-rose-400 p-1 transition"
+                      title="Remove item"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </button>
+                  </div>
                 </div>
               ))}
             </div>

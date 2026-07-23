@@ -12,9 +12,14 @@ import {
   LogOut,
   Settings as SettingsIcon,
   X,
+  Menu,
 } from 'lucide-react';
 
-export const Navbar: React.FC = () => {
+interface NavbarProps {
+  onToggleMobileMenu?: () => void;
+}
+
+export const Navbar: React.FC<NavbarProps> = ({ onToggleMobileMenu }) => {
   const {
     user,
     setUser,
@@ -44,16 +49,28 @@ export const Navbar: React.FC = () => {
   };
 
   return (
-    <header className="sticky top-0 z-30 h-16 flex-shrink-0 flex items-center justify-between px-6 sm:px-8 bg-white/[0.02] border-b border-white/10 backdrop-blur-xl">
-      {/* Search & Command Palette Trigger */}
-      <div className="flex items-center gap-3">
+    <header className="sticky top-0 z-30 h-16 flex-shrink-0 flex items-center justify-between px-3 sm:px-6 lg:px-8 bg-white/[0.02] border-b border-white/10 backdrop-blur-xl">
+      {/* Left: Mobile Menu Toggle & Search */}
+      <div className="flex items-center gap-2 sm:gap-3 min-w-0">
+        {/* Mobile Hamburger Button */}
+        {onToggleMobileMenu && (
+          <button
+            onClick={onToggleMobileMenu}
+            className="lg:hidden p-2 rounded-xl bg-white/5 border border-white/10 text-slate-300 hover:text-white hover:bg-white/10 transition shrink-0"
+            aria-label="Open mobile navigation"
+          >
+            <Menu className="w-5 h-5" />
+          </button>
+        )}
+
+        {/* Search & Command Palette Trigger */}
         <button
           onClick={() => setIsCommandPaletteOpen(true)}
-          className="flex items-center gap-3 bg-white/5 border border-white/10 px-4 py-1.5 rounded-full text-slate-400 hover:bg-white/10 hover:text-white transition w-64 sm:w-96 text-xs"
+          className="flex items-center gap-2 sm:gap-3 bg-white/5 border border-white/10 px-3 sm:px-4 py-1.5 rounded-full text-slate-400 hover:bg-white/10 hover:text-white transition w-36 sm:w-64 md:w-80 lg:w-96 text-xs"
         >
-          <Search className="w-4 h-4 text-slate-400" />
-          <span className="truncate">Search AI documents or tools...</span>
-          <span className="ml-auto text-[10px] bg-white/10 px-1.5 py-0.5 rounded text-slate-400 font-mono tracking-tighter">
+          <Search className="w-4 h-4 text-slate-400 shrink-0" />
+          <span className="truncate">Search AI tools...</span>
+          <span className="hidden sm:inline-block ml-auto text-[10px] bg-white/10 px-1.5 py-0.5 rounded text-slate-400 font-mono tracking-tighter shrink-0">
             ⌘ K
           </span>
         </button>
@@ -61,23 +78,23 @@ export const Navbar: React.FC = () => {
         {/* Voice Assistant Trigger */}
         <button
           onClick={() => setIsVoiceAssistantOpen(true)}
-          className="p-2 rounded-full bg-indigo-500/10 hover:bg-indigo-500/20 text-indigo-400 border border-indigo-500/20 text-xs font-semibold flex items-center gap-1.5 transition"
+          className="p-2 sm:px-3 sm:py-1.5 rounded-full bg-indigo-500/10 hover:bg-indigo-500/20 text-indigo-400 border border-indigo-500/20 text-xs font-semibold flex items-center gap-1.5 transition shrink-0"
           title="Voice Assistant"
         >
-          <Mic className="w-4 h-4 text-indigo-400 animate-pulse" />
-          <span className="hidden lg:inline text-xs">Voice AI</span>
+          <Mic className="w-4 h-4 text-indigo-400 animate-pulse shrink-0" />
+          <span className="hidden md:inline text-xs">Voice AI</span>
         </button>
       </div>
 
       {/* Right Navbar Controls */}
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-2 sm:gap-3 shrink-0">
         {/* Currency Selector */}
-        <div className="relative flex items-center bg-white/5 border border-white/10 rounded-full px-2.5 py-1">
-          <DollarSign className="w-3.5 h-3.5 text-indigo-400" />
+        <div className="relative flex items-center bg-white/5 border border-white/10 rounded-full px-2 sm:px-2.5 py-1">
+          <DollarSign className="w-3.5 h-3.5 text-indigo-400 shrink-0" />
           <select
             value={currency}
             onChange={(e) => setCurrency(e.target.value as any)}
-            className="bg-transparent text-xs font-medium text-slate-200 focus:outline-none cursor-pointer pr-1"
+            className="bg-transparent text-[11px] sm:text-xs font-medium text-slate-200 focus:outline-none cursor-pointer pr-1"
           >
             <option value="USD" className="bg-[#111827] text-slate-100">USD ($)</option>
             <option value="PKR" className="bg-[#111827] text-slate-100">PKR (Rs)</option>
@@ -88,7 +105,7 @@ export const Navbar: React.FC = () => {
         {/* Theme Toggle */}
         <button
           onClick={() => setDarkMode(!darkMode)}
-          className="p-2 rounded-full bg-white/5 border border-white/10 text-slate-300 hover:text-white hover:bg-white/10 transition"
+          className="p-2 rounded-full bg-white/5 border border-white/10 text-slate-300 hover:text-white hover:bg-white/10 transition shrink-0"
           title={darkMode ? 'Switch to Light Theme' : 'Switch to Dark Theme'}
         >
           {darkMode ? <Sun className="w-4 h-4 text-amber-400" /> : <Moon className="w-4 h-4 text-indigo-400" />}
@@ -98,14 +115,14 @@ export const Navbar: React.FC = () => {
         <div className="relative">
           <button
             onClick={() => setIsNotifOpen(!isNotifOpen)}
-            className="p-2 rounded-full bg-white/5 border border-white/10 text-slate-300 hover:text-white hover:bg-white/10 relative transition"
+            className="p-2 rounded-full bg-white/5 border border-white/10 text-slate-300 hover:text-white hover:bg-white/10 relative transition shrink-0"
           >
             <Bell className="w-4 h-4" />
             <span className="absolute top-1 right-1 w-2 h-2 rounded-full bg-indigo-500" />
           </button>
 
           {isNotifOpen && (
-            <div className="absolute right-0 mt-2 w-80 bg-[#111827]/95 border border-white/10 backdrop-blur-2xl rounded-2xl shadow-2xl p-4 z-50">
+            <div className="absolute right-0 mt-2 w-72 sm:w-80 bg-[#111827]/95 border border-white/10 backdrop-blur-2xl rounded-2xl shadow-2xl p-4 z-50">
               <div className="flex items-center justify-between border-b border-white/10 pb-2 mb-3">
                 <span className="text-xs font-bold text-white">Activity Notifications</span>
                 <button onClick={() => setIsNotifOpen(false)} className="text-slate-400 hover:text-white">
@@ -132,7 +149,7 @@ export const Navbar: React.FC = () => {
         <div className="relative">
           <button
             onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
-            className="flex items-center gap-2 p-1 rounded-full hover:bg-white/5 transition"
+            className="flex items-center gap-1.5 sm:gap-2 p-1 rounded-full hover:bg-white/5 transition"
           >
             <div className="h-8 w-8 rounded-full border border-indigo-500/50 p-0.5">
               <img
@@ -141,13 +158,13 @@ export const Navbar: React.FC = () => {
                 className="w-full h-full rounded-full object-cover"
               />
             </div>
-            <ChevronDown className="w-3.5 h-3.5 text-slate-400" />
+            <ChevronDown className="w-3.5 h-3.5 text-slate-400 hidden sm:block" />
           </button>
 
           {isUserMenuOpen && (
-            <div className="absolute right-0 mt-2 w-56 bg-[#111827]/95 border border-white/10 backdrop-blur-2xl rounded-2xl shadow-2xl p-2 z-50">
+            <div className="absolute right-0 mt-2 w-52 sm:w-56 bg-[#111827]/95 border border-white/10 backdrop-blur-2xl rounded-2xl shadow-2xl p-2 z-50">
               <div className="px-3 py-2 border-b border-white/10 mb-1">
-                <p className="text-xs font-bold text-white">{user.name}</p>
+                <p className="text-xs font-bold text-white truncate">{user.name}</p>
                 <p className="text-[10px] text-slate-400 truncate">{user.email}</p>
               </div>
 
